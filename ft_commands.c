@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   ft_commands.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migonzal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/15 10:51:54 by migonzal          #+#    #+#             */
-/*   Updated: 2022/04/06 11:24:52 by migonzal         ###   ########.fr       */
+/*   Created: 2022/04/05 08:09:45 by migonzal          #+#    #+#             */
+/*   Updated: 2022/04/06 11:24:54 by migonzal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "pipex.h"
 
-#define READ_END 0
-#define WRITE_END 1
-/*
 void	error(void)
 {
-	perror(" A donde vas perro");
-	exit (EXIT_FAILURE);
+	perror("bip bip bip error");
+	exit(EXIT_FAILURE);
 }
 
 char	*find_path(char *cmd, char **envp)
@@ -51,32 +49,4 @@ void	execute(char *argv, char **envp)
 	cmd = ft_split(argv, ' ');
 	if (execve(find_path(cmd[0], envp), cmd, envp) == -1)
 		error();
-}
-*/
-void	child(char **argv, char **envp, int *fd)
-{
-	int	filein;
-
-	filein = open(argv[1], O_RDONLY, 0777);
-	if (filein == -1)
-		error();
-	dup2(fd[1], STDOUT_FILENO);
-	dup2(filein, STDIN_FILENO);
-	close(fd[0]);
-	execute(argv[2], envp);
-	system("leaks pipex");
-}
-
-void	father(char **argv, char **envp, int *fd)
-{
-	int	fileout;
-
-	fileout = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fileout == -1)
-		error();
-	dup2(fd[0], STDIN_FILENO);
-	dup2(fileout, STDOUT_FILENO);
-	close(fd[1]);
-	execute(argv[3], envp);
-	system("leaks pipex");
 }
